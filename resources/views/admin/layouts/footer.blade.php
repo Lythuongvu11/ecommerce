@@ -1,0 +1,1 @@
+<footer class="credit">Author: <a href="https://www.youtube.com/c/CodingMarket" rel="nofollow" target="_blank"> Coding Market </a> - Distributed By: <a title="Awesome web design code & scripts" href="https://www.codehim.com?source=demo-page" target="_blank">CodeHim</a></footer>
