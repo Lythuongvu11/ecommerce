@@ -1,11 +1,11 @@
 @extends('admin.layouts.app')
-@section('title', 'Create User')
+@section('title', 'Create Product')
 @section('content')
     <div class="card">
-        <h1>Create User</h1>
+        <h1>Create Product</h1>
 
         <div>
-            <form action="{{ route('users.store') }}" method="post" enctype="multipart/form-data">
+            <form action="{{ route('products.store') }}" method="post" enctype="multipart/form-data">
                 @csrf
 
                 <div class="input-group input-group-static mb-4">

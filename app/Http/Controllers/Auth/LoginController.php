@@ -3,13 +3,16 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Request;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class LoginController extends Controller
 {
+    use AuthenticatesUsers;
     public function showLoginForm()
     {
         return view('client.auth.login');
@@ -17,17 +20,19 @@ class LoginController extends Controller
 
     public function login(Request $request)
     {
-        $credentials = $request->validate([
+        $this->validate($request, [
             'email' => 'required|email',
             'password' => 'required',
         ]);
-
-        if (Auth::attempt($credentials)) {
-            // Authentication passed
-            return redirect()->intended('/'); // Redirect to the intended page
+        $user = User::where('email', $request->email)->first();
+        if ($user && Hash::check($request->password, $user->password)) {
+            Auth::login($user, $request->remember);
+            dd(Auth::user()->name);
+            return redirect()->route('client.home');
         }
 
-        return redirect()->route('login')->with('error', 'Invalid credentials. Please try again.');
+
+        return redirect()->route('login')->with(['message'=> 'Invalid credentials. Please try again.']);
     }
     /*
     |--------------------------------------------------------------------------

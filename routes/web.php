@@ -7,6 +7,8 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Client\HomeController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\Auth\ResetPasswordController;
+use App\Http\Controllers\Auth\ForgotPasswordController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 /*
@@ -20,7 +22,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', [HomeController::class,'index'])->name('client.home');
+//Route::get('/', [HomeController::class,'index'])->name('client.home');
 
 Route::get('/admin/dashboard',function (){
     return view('admin.dashboard.index');
@@ -34,7 +36,12 @@ Route::get('/register', [RegisterController::class,'showRegistrationForm'])->nam
 Route::post('/register', [RegisterController::class,'register']);
 Route::get('/login', [LoginController::class,'showLoginForm'])->name('login');
 Route::post('/login', [LoginController::class,'login']);
+Route::post('logout', [LoginController::class, 'logout'])->name('logout');
 
+Route::get('password/reset', [ForgotPasswordController::class,'showLinkRequestForm'])->name('password.request');
+Route::post('password/email', [ForgotPasswordController::class,'sendResetLinkEmail'])->name('password.email');
+Route::get('password/reset/{token}', [ResetPasswordController::class,'showResetForm'])->name('password.reset');
+Route::post('password/reset', [ResetPasswordController::class,'reset'])->name('password.update');
 //Role
 Route::resource('roles',RoleController::class);
 
@@ -45,7 +52,7 @@ Route::resource('categories',CategoryController::class);
 //product
 Route::resource('products',ProductController::class);
 //Search
-Route::get('/products', [HomeController::class,'index'])->name('client.home');
+Route::get('/', [HomeController::class,'index'])->name('client.home');
 Route::post('/products/search', [HomeController::class,'search'])->name('product.search');
 //detail
 Route::match(['get', 'post'],'/product-detail/{id}',[\App\Http\Controllers\Client\ProductController::class,'show'])->name('product.show');

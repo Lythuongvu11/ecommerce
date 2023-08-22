@@ -35,6 +35,6 @@ class RegisterController extends Controller
         ]);
 
         // You can customize the redirect route after successful registration
-        return redirect()->route('login')->with('success', 'Registration successful! Please log in.');
+        return redirect()->route('login')->with(['message'=>'Registration successful! Please log in.']);
     }
 }

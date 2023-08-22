@@ -3,30 +3,26 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Products\CreateProductRequest;
-use App\Http\Requests\Products\UpdateProductRequest;
 use App\Models\Category;
-use App\Services\ProductService;
 use App\Models\Product;
-
+use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
-    protected  $category;
-    protected  $product;
-    public function __construct(Category $category, Product $product)
+    protected $category;
+    protected $product;
+    public function __construct(Product $product,Category $category)
     {
-        $this->category = $category;
-        $this->product = $product;
+        $this->category=$category;
+        $this->product=$product;
     }
-
-
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $products=$this->product->lastest('id')->paginate(5);
+        $perPage = $request->input('per_page', 50);
+        $products=$this->product->latest('id')->paginate($perPage);
         return view('admin.products.index',compact('products'));
     }
 

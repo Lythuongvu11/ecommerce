@@ -36,8 +36,18 @@
         </ul>
         <div id="header-color">
             <ul>
-                <li><a href="{{route('login')}}">LOGIN</a></li>
-                <li><a href="{{route('register')}}">REGISTER</a></li>
+                @if(Auth::check())
+                    <p>Welcome, {{ Auth::user()->name }}</p>
+                    <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                        Logout
+                    </a>
+                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                        @csrf
+                    </form>
+                @else
+                    <li><a href="{{ route('login') }}">LOGIN</a></li>
+                    <li><a href="{{ route('register') }}">REGISTER</a></li>
+                @endif
             </ul>
         </div>
     </div>

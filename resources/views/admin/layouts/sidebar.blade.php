@@ -28,16 +28,17 @@
                     <span class="title">User</span>
                 </a>
             </li>
-{{--            <li>--}}
-{{--                <a href="{{route('products.index')}}" class="{{request()->routeIs('products.*')? 'active' :''}}">--}}
-{{--                    <span class="icon"><i class="fas fa-chart-pie"></i></span>--}}
-{{--                    <span class="title">Product</span>--}}
-{{--                </a>--}}
-{{--            </li>--}}
+
             <li>
                 <a href="{{route('categories.index')}}" class="{{request()->routeIs('categories.*')? 'active' :''}}">
                     <span class="icon"><i class="fas fa-border-all"></i></span>
                     <span class="title">Category</span>
+                </a>
+            </li>
+            <li>
+                <a href="{{route('products.index')}}" class="{{request()->routeIs('products.*')? 'active' :''}}">
+                    <span class="icon"><i class="fas fa-chart-pie"></i></span>
+                    <span class="title">Product</span>
                 </a>
             </li>
         </ul>
