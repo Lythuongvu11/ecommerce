@@ -3,17 +3,16 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Products\CreatProductRequest;
 use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
-    protected $category;
     protected $product;
-    public function __construct(Product $product,Category $category)
+    public function __construct(Product $product)
     {
-        $this->category=$category;
         $this->product=$product;
     }
     /**
@@ -22,8 +21,16 @@ class ProductController extends Controller
     public function index(Request $request)
     {
         $perPage = $request->input('per_page', 50);
-        $products=$this->product->latest('id')->paginate($perPage);
-        return view('admin.products.index',compact('products'));
+        $query=$this->product->latest('id');
+        // Search functionality
+        $search = $request->input('search');
+        if ($search) {
+            $query->where('name', 'like', "%$search%")
+                ->orWhere('description', 'like', "%$search%");
+        }
+
+        $products=$query->paginate($perPage);
+        return view('admin.products.index',compact('products','search'));
     }
 
     /**
@@ -31,16 +38,28 @@ class ProductController extends Controller
      */
     public function create()
     {
-        $categories=$this->category->get(['id','name']);
-        return view('admin.products.create',compact('categories'));
+
+        return view('admin.products.create');
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(CreatProductRequest $request)
     {
-        //
+        $validatedData = $request->all();
+
+        // Upload the image file
+        $imagePath = $request->file('image')->store('public/product_images');
+        // Remove "public/" from the image path
+        $imagePath = str_replace('public/', '', $imagePath);
+
+        // Create the product
+        $product = new Product($validatedData);
+        $product->image = $imagePath;
+        $product->save();
+
+        return redirect()->route('products.index')->with(['message', 'Product created'.$product->name. 'successfully.']);
     }
 
     /**

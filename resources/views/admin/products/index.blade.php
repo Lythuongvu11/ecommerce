@@ -8,14 +8,8 @@
         <h1>
             Product list
         </h1>
-            <form action="/products" method="GET">
-                <input type="text" name="search" placeholder="Search">
-                <select name="per_page">
-                    <option value="10">10</option>
-                    <option value="20">20</option>
-                    <option value="50">50</option>
-                    <option value="100">100</option>
-                </select>
+            <form action="{{ route('products.index') }}" method="GET">
+                <input type="text" name="search" value="{{ $search }}" placeholder="Search products">
                 <button type="submit">Search</button>
             </form>
         <div>
@@ -37,7 +31,7 @@
                 @foreach($products as $item)
                     <tr>
                         <td>{{$item->id}}</td>
-                        <td><img src="{{$item->image }}" width="200px" height="200px" alt="Product Image"></td>
+                        <td><img src="{{ asset('storage/' . $item->image) }}" width="200px" height="200px" alt="Product Image"></td>
                         <td>{{$item->name}}</td>
                         <td>{{$item->description}}</td>
                         <td>{{$item->size}}</td>
@@ -60,6 +54,14 @@
                     </tr>
                 @endforeach
             </table>
+            <form action="/products" method="GET">
+                <select name="per_page" id="per_page_select" onchange="this.form.submit()">
+                    <option value="10" {{ request('per_page') == 10 ? 'selected' : '' }}>10</option>
+                    <option value="20" {{ request('per_page') == 20 ? 'selected' : '' }}>20</option>
+                    <option value="50" selected {{ request('per_page') == 50 ? 'selected' : '' }}>50</option>
+                    <option value="100" {{ request('per_page') == 100 ? 'selected' : '' }}>100</option>
+                </select>
+            </form>
             {{$products->links()}}
         </div>
 
