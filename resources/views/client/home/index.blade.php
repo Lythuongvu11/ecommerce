@@ -48,7 +48,7 @@
                         <div class="make3D">
                             <div class="product-front">
                                 <div class="shadow"></div>
-                                <img src="{{$item->image}}" alt="" />
+                                <img src="storage/{{$item->image}}" alt="" />
                                 <div class="image_overlay"></div>
                                 <div class="add_to_cart">Add to cart</div>
                                 <div class="view_gallery">View gallery</div>
@@ -77,9 +77,9 @@
                                 <div class="shadow"></div>
                                 <div class="carousel">
                                     <ul class="carousel-container">
-                                        <li><img src="{{$item->image}}" alt="" /></li>
-                                        <li><img src="{{$item->image}}" alt="" /></li>
-                                        <li><img src="{{$item->image}}" alt="" /></li>
+                                        <li><img src="storage/{{$item->image}}" alt="" /></li>
+                                        <li><img src="storage/{{$item->image}}" alt="" /></li>
+                                        <li><img src="storage/{{$item->image}}" alt="" /></li>
                                     </ul>
                                     <div class="arrows-perspective">
                                         <div class="carouselPrev">
@@ -106,6 +106,49 @@
                 {{$products->links() }}
             </div>
         </div>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const csrfTokenMeta = document.querySelector('meta[name="csrf-token"]');
+
+                if (csrfTokenMeta) {
+                    const csrfToken = csrfTokenMeta.getAttribute('content');
+
+                    const categoryLinks = document.querySelectorAll('.categories a');
+                    const grid = document.getElementById('grid');
+
+                    categoryLinks.forEach(link => {
+                        link.addEventListener('click', function(event) {
+                            event.preventDefault();
+                            const categoryId = this.getAttribute('data-category-id');
+
+                            // Gửi yêu cầu AJAX để lấy dữ liệu sản phẩm dựa trên categoryId
+                            $.ajax({
+                                type: 'POST',
+                                url: '{{ route("filtered.products") }}',
+                                data: {
+                                    _token: csrfToken,
+                                    categoryId: categoryId
+                                },
+                                success: function(response) {
+                                    // Cập nhật dữ liệu sản phẩm trong phần grid
+                                    grid.innerHTML = response;
+                                },
+                                error: function(xhr, status, error) {
+                                    console.error(error);
+                                }
+                            });
+                        });
+                    });
+                } else {
+                    console.error('CSRF token meta tag not found.');
+                }
+
+                // Các mã JavaScript khác của bạn
+            });
+        </script>
+
+
 
 
 @endsection

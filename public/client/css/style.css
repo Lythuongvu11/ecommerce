@@ -204,7 +204,7 @@ body {
     border-color:#8d939f;
 }
 .colors ul, .sizes ul{
-    float:left; width:130px;
+    float:left;
 }
 .colors ul li{padding-left:21px;}
 .colors a span{
@@ -335,7 +335,7 @@ div.large .make3D{
     position:absolute;
     top:382px;
     left:0;
-    width: 252px;
+    width: 100%;
     height: 300px;
     padding: 24px 40px 35px 32px;
     -webkit-transition: all 200ms ease-out;
@@ -358,7 +358,7 @@ div.large .make3D{
 .stats-container p{
     font-size:15px;
     color:#b1b1b3;
-    padding:2px 0 20px 0;
+    padding:2px 0 2px 0;
 }
 .stats-container .product_price{
     float:right;

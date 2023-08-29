@@ -27,6 +27,10 @@
                     <textarea name="description" id="description" class="form-control" ></textarea>
                 </div>
                 <div class="input-group input-group-static mb-4">
+                    <label for="category_id">Category ID:</label>
+                    <input type="number" name="category_id" id="category_id" class="form-control" >
+                </div>
+                <div class="input-group input-group-static mb-4">
                     <label for="size">Size:</label>
                     <input type="text" name="size" id="size" class="form-control" >
                 </div>

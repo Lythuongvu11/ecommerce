@@ -26,7 +26,7 @@
 {{--                </div>--}}
 
 
-                <button type="submit" class="btn btn-submit btn-primary">Submit</button>
+                <button type="submit" class="btn btn-submit btn-primary">Create</button>
             </form>
         </div>
     </div>

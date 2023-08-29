@@ -25,7 +25,8 @@ class User extends Authenticatable
         'password',
         'phone',
         'address',
-        'gender'
+        'gender',
+        'reset_password_token',
     ];
 //    protected $table = 'admins';
 

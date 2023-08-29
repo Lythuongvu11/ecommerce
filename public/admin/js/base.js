@@ -28,7 +28,15 @@ $(() => {
                 console.log(`#form-delete${id}`);
                 $(`#form-delete${id}`).submit();
             })
-            .catch();
+            .catch(function (error) {
+                // Xử lý lỗi tại đây
+                console.error("Error:", error);
+            });
     })
 
 })
+
+
+
+
+

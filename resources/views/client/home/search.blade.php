@@ -36,7 +36,7 @@
                 <div class="make3D">
                     <div class="product-front">
                         <div class="shadow"></div>
-                        <img src="{{$item->image}}" alt="" />
+                        <img src="{{ asset('storage/' . $item->image) }}" alt="" />
                         <div class="image_overlay"></div>
                         <div class="add_to_cart">Add to cart</div>
                         <div class="view_gallery">View gallery</div>

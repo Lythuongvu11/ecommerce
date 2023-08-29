@@ -4,9 +4,12 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Products\CreatProductRequest;
+use App\Http\Requests\Products\UpdateProductRequest;
+use App\Http\Requests\Users\UpdateUserRequest;
 use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Storage;
 
 class ProductController extends Controller
 {
@@ -59,38 +62,70 @@ class ProductController extends Controller
         $product->image = $imagePath;
         $product->save();
 
-        return redirect()->route('products.index')->with(['message', 'Product created'.$product->name. 'successfully.']);
+        return redirect()->route('products.index')->with(['message', 'Product created '.$product->name. 'successfully.']);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Product $product)
     {
-        //
+        return view('admin.products.show', compact('product'));
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(Product $product)
     {
-        //
+        return view('admin.products.edit', compact('product'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UpdateProductRequest $request, Product $product)
     {
-        //
+        $validatedData = $request->all();
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('public/product_images');
+            $imagePath = str_replace('public/', '', $imagePath);
+            $validatedData['image'] = $imagePath;
+        }
+
+        $product->update($validatedData);
+
+        return redirect()->route('products.index')->with('message', 'Product updated '.$product->name. ' successfully.');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Product $product)
     {
-        //
+        // Xóa sản phẩm và ảnh liên quan
+        Storage::delete('public/' . $product->image);
+        $product->delete();
+
+        return redirect()->route('products.index')->with('message', 'Product deleted successfully.');
     }
+
+    public function deleteSelected(Request $request)
+    {
+        $selectedProductIds =  $request->input('products', []);
+        if (!empty($selectedProductIds)) {
+            $selectedProducts = Product::whereIn('id', $selectedProductIds)->get();
+
+            foreach ($selectedProducts as $product) {
+                Storage::delete('public/' . $product->image);
+                $product->delete();
+            }
+
+            return redirect()->route('products.index')->with('message', 'Selected products have been deleted.');
+        }
+
+        return redirect()->route('products.index')->with('message', 'No products selected for deletion.');
+    }
+
+
 }

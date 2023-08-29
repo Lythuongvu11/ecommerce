@@ -27,12 +27,17 @@ class LoginController extends Controller
         $user = User::where('email', $request->email)->first();
         if ($user && Hash::check($request->password, $user->password)) {
             Auth::login($user, $request->remember);
-            dd(Auth::user()->name);
             return redirect()->route('client.home');
         }
 
 
         return redirect()->route('login')->with(['message'=> 'Invalid credentials. Please try again.']);
+    }
+    public function logout(Request $request)
+    {
+        Auth::guard('web')->logout();
+
+        return redirect('/login');
     }
     /*
     |--------------------------------------------------------------------------

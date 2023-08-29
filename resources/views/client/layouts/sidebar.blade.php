@@ -16,7 +16,7 @@
     <div class="checklist categories">
         <ul>
             @foreach($categories as $item)
-                <li><a href=""><span></span>{{$item->name}}</a></li>
+                <li><a href="" data-category-id="{{ $item->id }}"><span></span>{{$item->name}}</a></li>
             @endforeach
         </ul>
     </div>
@@ -55,6 +55,4 @@
         </ul>
     </div>
 
-    <h3>PRICE RANGE</h3>
-    <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/245657/price-range.png" alt="" />
 </div>

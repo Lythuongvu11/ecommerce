@@ -1,12 +1,10 @@
 <div class="sidebar">
     <div class="sidebar__inner">
         <div class="profile">
-            <div class="img">
-                <img src="{{asset('admin/images/ảnh thẻ.jpg')}}" alt="Image">
-            </div>
             <div class="profile_info">
-                <p>Welcome</p>
-                <p class="profile_name">Thuong Vu</p>
+                <p>Welcome to page Admin</p>
+
+
             </div>
         </div>
         <ul>
@@ -44,3 +42,4 @@
         </ul>
     </div>
 </div>
+
