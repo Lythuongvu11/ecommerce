@@ -6,6 +6,7 @@
                 <form action="{{ route('product.search')}}" method="POST">
                     @csrf
                     <input type="text" name="query" placeholder="Tìm kiếm...">
+
                     <button type="submit">Tìm kiếm</button>
                 </form>
 
@@ -48,7 +49,7 @@
                         <div class="make3D">
                             <div class="product-front">
                                 <div class="shadow"></div>
-                                <img src="storage/{{$item->image}}" alt="" />
+                                <img src="http://127.0.0.1:8000/storage/{{  $item->image }}" alt="loi" />
                                 <div class="image_overlay"></div>
                                 <div class="add_to_cart">Add to cart</div>
                                 <div class="view_gallery">View gallery</div>
@@ -107,48 +108,23 @@
             </div>
         </div>
 
+
         <script>
             document.addEventListener('DOMContentLoaded', function() {
-                const csrfTokenMeta = document.querySelector('meta[name="csrf-token"]');
+                const categoryCheckboxes = document.querySelectorAll('input[name="selectedCategories[]"]');
 
-                if (csrfTokenMeta) {
-                    const csrfToken = csrfTokenMeta.getAttribute('content');
-
-                    const categoryLinks = document.querySelectorAll('.categories a');
-                    const grid = document.getElementById('grid');
-
-                    categoryLinks.forEach(link => {
-                        link.addEventListener('click', function(event) {
-                            event.preventDefault();
-                            const categoryId = this.getAttribute('data-category-id');
-
-                            // Gửi yêu cầu AJAX để lấy dữ liệu sản phẩm dựa trên categoryId
-                            $.ajax({
-                                type: 'POST',
-                                url: '{{ route("filtered.products") }}',
-                                data: {
-                                    _token: csrfToken,
-                                    categoryId: categoryId
-                                },
-                                success: function(response) {
-                                    // Cập nhật dữ liệu sản phẩm trong phần grid
-                                    grid.innerHTML = response;
-                                },
-                                error: function(xhr, status, error) {
-                                    console.error(error);
-                                }
-                            });
-                        });
+                categoryCheckboxes.forEach(checkbox => {
+                    checkbox.addEventListener('change', function(event) {
+                        if (event.target.checked){
+                            console.log(event.target.value);
+                        }
+                        else {
+                            console.log("not selected");
+                        }
                     });
-                } else {
-                    console.error('CSRF token meta tag not found.');
-                }
-
-                // Các mã JavaScript khác của bạn
+                });
             });
         </script>
-
-
 
 
 @endsection

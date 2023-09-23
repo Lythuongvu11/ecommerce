@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Client;
 
 use App\Http\Controllers\Controller;
+use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Http\Request;
 
@@ -13,32 +14,21 @@ class ProductController extends Controller
     {
         $this->product = $product;
     }
+    public function showByCategory(Category $category)
+    {
+        $products = Product::where('category_id', $category->id)->paginate(10);
+        $categories = Category::all();
+
+        return view('client.home.index', compact('products', 'categories'));
+    }
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request, $category_id)
+    public function index()
     {
-        $products =  $this->product->getBy($request->all(), $category_id);
-
-        return view('client.home.index', compact('products'));
 
     }
-    public function filteredProducts(Request $request)
-    {
-        $category = $request->input('category'); // Lấy mã danh mục từ request
 
-        $query = Product::query();
-
-        if ($category) {
-            $query = $query->where('category_id', $category);
-        }
-
-        $products = $query->get();
-
-        return response()->json([
-            'products' => $products
-        ]);
-    }
 
     /**
      * Show the form for creating a new resource.

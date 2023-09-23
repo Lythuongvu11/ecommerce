@@ -8,7 +8,7 @@
 
     <!-- Shop Detail Start -->
     <div class="container-fluid py-5">
-        <form action="{{route('client.carts.add')}}" method="POST" class="row px-xl-5">
+        <form action="{{ route('client.carts.add')}}" method="POST" class="row px-xl-5">
             @csrf
             <input type="hidden" name="product_id" value="{{ $product->id }}">
             <div class="col-lg-5 pb-5">
@@ -21,7 +21,7 @@
             </div>
 
             <div class="col-lg-7 pb-5">
-                <h3 class="font-weight-semi-bold">{{ $product->name }}</h3>
+                <h3 class="font-weight-semi-bold" >{{ $product->name }}</h3>
                 <div class="d-flex mb-3">
 
                 </div>
@@ -43,12 +43,12 @@
                     <p class="text-dark font-weight-medium mb-0 mr-3">Color:</p>
                     @foreach(explode(',', $product->color) as $color)
                         <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" name="inlineRadioOptions1" id="inlineRadio1" value="option">
-                            <label class="form-check-label" style="color: {{$color}}" for="inlineRadio1">{{$color}}</label>
+                            <input class="form-check-input" type="radio" name="product_color" value="{{ $color }}" id="color{{ $color }}">
+                            <label class="form-check-label" style="color: {{ $color }}" for="color{{ $color }}">{{ $color }}</label>
                         </div>
                     @endforeach
-
                 </div>
+
 
 
                 <div class="d-flex align-items-center mb-4 pt-2">
@@ -58,14 +58,14 @@
                                 <i class="fa fa-minus"></i>
                             </button>
                         </div>
-                        <input id="quantityInput" type="text" class="form-control bg-secondary text-center" value="1">
+                        <input id="quantityInput" type="text" name="product_quantity" class="form-control bg-secondary text-center" value="1">
                         <div class="input-group-btn">
                             <button  class="btn btn-primary btn-plus">
                                 <i class="fa fa-plus"></i>
                             </button>
                         </div>
                     </div>
-                    <button class="btn btn-primary px-3"><i class="fa fa-shopping-cart mr-1"></i> Add To Cart</button>
+                    <button type="submit" class="btn btn-primary px-3"><i class="fa fa-shopping-cart mr-1"></i> Add To Cart</button>
                 </div>
                 <div class="d-flex pt-2">
                     <p class="text-dark font-weight-medium mb-0 mr-2">Share on:</p>
@@ -87,4 +87,7 @@
             </div>
         </form>
     </div>
+
+
+
 @endsection

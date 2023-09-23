@@ -33,6 +33,9 @@ class ProductController extends Controller
         }
 
         $products=$query->paginate($perPage);
+//        return response()->json([
+//            'products'=>$products,
+//        ]);
         return view('admin.products.index',compact('products','search'));
     }
 
@@ -51,18 +54,23 @@ class ProductController extends Controller
     public function store(CreatProductRequest $request)
     {
         $validatedData = $request->all();
+        $image = $request->file('image');
+        if ($image) {
+            // Lưu tệp ảnh vào thư mục lưu trữ
+            $imagePath = $image->storeAs('public/product_images', $image->getClientOriginalName());
+//            $imagePath = $image->store('public/product_images');
 
-        // Upload the image file
-        $imagePath = $request->file('image')->store('public/product_images');
-        // Remove "public/" from the image path
-        $imagePath = str_replace('public/', '', $imagePath);
+            // Loại bỏ tiền tố "public/" từ đường dẫn tệp ảnh
+            $imagePath = str_replace('public/', '', $imagePath);
+            // Gán đường dẫn tệp ảnh cho sản phẩm
+            $validatedData['image'] = $imagePath;
+        }
 
         // Create the product
         $product = new Product($validatedData);
-        $product->image = $imagePath;
         $product->save();
-
-        return redirect()->route('products.index')->with(['message', 'Product created '.$product->name. 'successfully.']);
+        return response()->json(['message' => 'Create success']);
+        // return redirect()->route('products.index')->with(['message', 'Product created '.$product->name. 'successfully.']);
     }
 
     /**
@@ -76,17 +84,23 @@ class ProductController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Product $product)
+    public function edit(string $id)
+
     {
-        return view('admin.products.edit', compact('product'));
+        $product=$this->product->findOrFail($id);
+        return response()->json([
+            'product'=>$product,
+        ]);
+//        return view('admin.products.edit', compact('product'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateProductRequest $request, Product $product)
+    public function update(Request $request, String $id)
     {
         $validatedData = $request->all();
+        $product=$this->product->findOrFail($id);
         if ($request->hasFile('image')) {
             $imagePath = $request->file('image')->store('public/product_images');
             $imagePath = str_replace('public/', '', $imagePath);
@@ -94,20 +108,23 @@ class ProductController extends Controller
         }
 
         $product->update($validatedData);
+        return response()->json(['message' => 'Update success']);
 
-        return redirect()->route('products.index')->with('message', 'Product updated '.$product->name. ' successfully.');
+//        return redirect()->route('products.index')->with('message', 'Product updated '.$product->name. ' successfully.');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Product $product)
+    public function destroy(string $id)
     {
-        // Xóa sản phẩm và ảnh liên quan
+        $product = $this->product->findOrFail($id);
         Storage::delete('public/' . $product->image);
         $product->delete();
+        return response()->json(['message' => 'Delete success']);
 
-        return redirect()->route('products.index')->with('message', 'Product deleted successfully.');
+
+//        return redirect()->route('products.index')->with('message', 'Product deleted successfully.');
     }
 
     public function deleteSelected(Request $request)
@@ -120,12 +137,29 @@ class ProductController extends Controller
                 Storage::delete('public/' . $product->image);
                 $product->delete();
             }
+                return response()->json(['message' => 'Delete success']);
+//            return redirect()->route('products.index')->with('message', 'Selected products have been deleted.');
+        }
+            return response()->json(['message' => 'No products selected for deletion.']);
+//        return redirect()->route('products.index')->with('message', 'No products selected for deletion.');
+    }
+    public function showdata(Request $request)
+    {
+        $query = Product::query();
 
-            return redirect()->route('products.index')->with('message', 'Selected products have been deleted.');
+        // Lấy giá trị tìm kiếm từ yêu cầu
+        $search = $request->input('search');
+
+        if ($search) {
+            // Sử dụng phương thức where để thêm điều kiện tìm kiếm
+            $query->where('name', 'like', '%' . $search . '%')
+                ->orWhere('description', 'like', '%' . $search . '%');
         }
 
-        return redirect()->route('products.index')->with('message', 'No products selected for deletion.');
-    }
+        // Thực hiện truy vấn và lấy dữ liệu sản phẩm
+        $data = $query->get();
 
+        return $data;
+    }
 
 }

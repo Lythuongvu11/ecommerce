@@ -71,7 +71,9 @@
                     <option value="100" {{ request('per_page') == 100 ? 'selected' : '' }}>100</option>
                 </select>
             </form>
-            {{$products->links()}}
+            <div class="pagination">
+                {{ $products->appends(['search' => $search, 'per_page' => $products->perPage()])->links() }}
+            </div>
         </div>
 
 
@@ -108,8 +110,6 @@
             }
         });
     </script>
-
-
 
 @endsection
 

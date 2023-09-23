@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Client;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Product;
+use Illuminate\Support\Facades\Session;
 
 class HomeController extends Controller
 {
@@ -20,7 +21,6 @@ class HomeController extends Controller
     public function index()
     {
         $products =  $this->product->paginate(12);
-
         return view('client.home.index', compact('products'));
     }
     //search

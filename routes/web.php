@@ -23,14 +23,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-//Route::get('/', [HomeController::class,'index'])->name('client.home');
 
-Route::get('/admin/dashboard',function (){
-    return view('admin.dashboard.index');
-})->name('dashboard');
-Route::get('/detail',function (){
-    return view('client.products.detail');
-});
 
 //Login user
 Route::get('/register', [RegisterController::class,'showRegistrationForm'])->name('register');
@@ -47,22 +40,36 @@ Route::post('password/request', [ForgotPasswordController::class,'ResetLinkEmail
 Route::get('password/reset/{token}', [ResetPasswordController::class,'showResetForm'])->name('password.reset');
 Route::post('password/update', [ResetPasswordController::class,'resetPassword'])->name('password.update');
 
-
+Auth::routes();
 //Admin
-//login
 
-    Route::get('admin/login', [AuthController::class,'showLoginForm'])->name('admin.login'); // Hiển thị form đăng nhập
-    Route::post('admin/login', [AuthController::class,'login']); // Xử lý đăng nhập
-    Route::post('/admin/logout', [AuthController::class, 'logout'])->name('admin.logout');
 
-    Route::get('admin/password/request', [AuthController::class, 'showForgotPasswordForm'])->name('admin.password.request'); // Hiển thị form quên mật khẩu
-    Route::post('admin/password/request', [AuthController::class, 'sendResetLinkEmail']); // Gửi liên kết đặt lại mật khẩu
-    Route::get('admin/password/reset/{token}', [AuthController::class, 'showResetPasswordForm'])->name('admin.password.reset'); // Hiển thị form đặt lại mật khẩu
-    Route::post('admin/password/update', [AuthController::class, 'resetPassword'])->name('admin.password.update'); // Xử lý đặt lại mật khẩu
+// Routes cho việc đăng nhập và quản lý mật khẩu
+Route::get('admin/login', [AuthController::class,'showLoginForm'])->name('admin.login'); // Hiển thị form đăng nhập
+Route::post('admin/login', [AuthController::class,'login']); // Xử lý đăng nhập
+
+Route::post('/admin/logout', [AuthController::class, 'logout'])->name('admin.logout');
+
+    // Route cho việc chuyển hướng sau khi đăng nhập thành công
+Route::get('/admin/dashboard', function () {
+    return view('admin.dashboard.index');
+})->name('dashboard');
+
+    // Routes cho việc quên mật khẩu và đặt lại mật khẩu
+Route::get('admin/password/request', [AuthController::class, 'showForgotPasswordForm'])->name('admin.password.request'); // Hiển thị form quên mật khẩu
+Route::post('admin/password/request', [AuthController::class, 'sendResetLinkEmail']); // Gửi liên kết đặt lại mật khẩu
+Route::get('admin/password/reset/{token}', [AuthController::class, 'showResetPasswordForm'])->name('admin.password.reset'); // Hiển thị form đặt lại mật khẩu
+Route::post('admin/password/update', [AuthController::class, 'resetPassword'])->name('admin.password.update'); // Xử lý đặt lại mật khẩu
+
+//dashboard
+Route::get('/admin/dashboard',function (){
+    return view('admin.dashboard.index');
+})->name('dashboard');
 //Role
 Route::resource('roles',RoleController::class);
 //user
 Route::resource('users',UserController::class);
+
 //category
 Route::resource('categories',CategoryController::class);
 //product
@@ -71,12 +78,26 @@ Route::post('/products/delete-selected', [ProductController::class,'deleteSelect
 Route::get('/products/{product}', [ProductController::class,'show'])->name('products.show');
 
 //Home
-//Search
+//Route::get('/', [HomeController::class,'index'])->name('client.home');
+
+
+
 Route::get('/', [HomeController::class,'index'])->name('client.home');
+//Search
 Route::post('/products/search', [HomeController::class,'search'])->name('product.search');
 //detail
+Route::get('/detail',function (){
+    return view('client.products.detail');
+});
 Route::match(['get', 'post'],'/product-detail/{id}',[\App\Http\Controllers\Client\ProductController::class,'show'])->name('product.show');
 //Category
-Route::post('/filtered-products', [\App\Http\Controllers\Client\ProductController::class,'filteredProducts'])->name('filtered.products');
+Route::get('/category/{category}', [\App\Http\Controllers\Client\ProductController::class,'showByCategory'])->name('category.show');
+//Route::get('/category/{categoryId}', [\App\Http\Controllers\Client\HomeController::class,'loadProductsByCategories'])->name('products.category');
 //Cart
-Route::post('add-to-cart', [\App\Http\Controllers\Client\CartController::class, 'store'])->name('client.carts.add');
+Route::post('/add-to-cart',  [\App\Http\Controllers\Client\CartController::class, 'addToCart'])->name('client.carts.add');
+Route::get('/cart', [\App\Http\Controllers\Client\CartController::class, 'index'])->name('client.cart.show');
+
+Route::post('/cart/update', [\App\Http\Controllers\Client\CartController::class, 'updateCart'])->name('update-cart');
+Route::get('/cart/remove/{id}', [\App\Http\Controllers\Client\CartController::class, 'removeFromCart'])->name('client.cart.remove');
+// Hiển thị giỏ hàng sau khi đăng nhập
+Route::get('/cart/after-login', [\App\Http\Controllers\Client\CartController::class, 'getCartAfterLogin'])->name('client.cart.getCartAfterLogin');

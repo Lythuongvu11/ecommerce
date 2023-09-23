@@ -41,15 +41,17 @@ class CategoryController extends Controller
     {
         $dataCreate=$request->all();
         $category=$this->category->create($dataCreate);
-        return redirect()->route('categories.index')->with(['message'=>'create new category:'.$category->name.' success']);
+        return response()->json(['message' => 'Create success']);
+//        return redirect()->route('categories.index')->with(['message'=>'create new category:'.$category->name.' success']);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function showdata()
     {
-        //
+        $categories = Category::get();
+        return $categories;
     }
 
     /**
@@ -58,8 +60,8 @@ class CategoryController extends Controller
     public function edit(string $id)
     {
         $category=$this->category->findOrFail($id);
-        $parentCategories = $this->category->all();
-        return view('admin.categories.edit', compact('category', 'parentCategories'));
+        return response()->json(['category' => $category]);
+//        return view('admin.categories.edit', compact('category', 'parentCategories'));
     }
 
     /**
@@ -70,7 +72,7 @@ class CategoryController extends Controller
         $dataUpdate = $request->all();
         $category = $this->category->findOrFail($id);
         $category->update($dataUpdate);
-        return redirect()->route('categories.index')->with(['message' => 'Update  category: '. $category->name." success"]);
+//        return redirect()->route('categories.index')->with(['message' => 'Update  category: '. $category->name." success"]);
 
     }
 
@@ -82,8 +84,8 @@ class CategoryController extends Controller
         $category = $this->category->findOrFail($id);
 
         $category->delete();
-
-        return redirect()->route('categories.index')->with(['message' => 'Delete  category: '. $category->name." success"]);
+        return response()->json(['message' => 'Delete success']);
+//        return redirect()->route('categories.index')->with(['message' => 'Delete  category: '. $category->name." success"]);
 
     }
 }

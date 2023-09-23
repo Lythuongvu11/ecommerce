@@ -1,13 +1,10 @@
 <div id="sidebar">
-    <h3>CART</h3>
-    <div id="cart">
-        <span class="empty">No items in cart.</span>
-    </div>
+{{--    <h3>CART</h3>--}}
     <div class="col-lg-3 col-6 text-right">
 
-        <a href="#" class="btn border">
+        <a href="{{route('client.cart.show')}}" class="btn border" id="addToCartButton">
             <i class="fas fa-shopping-cart text-primary"></i>
-            <span class="badge" id="productCountCart">0</span>
+{{--            <span class="badge" id="productCountCart">0</span>--}}
         </a>
     </div>
 
@@ -16,7 +13,11 @@
     <div class="checklist categories">
         <ul>
             @foreach($categories as $item)
-                <li><a href="" data-category-id="{{ $item->id }}"><span></span>{{$item->name}}</a></li>
+                <li>
+{{--                    <input type="checkbox" name="selectedCategories[]" value="{{ $item->id }}" id="category{{ $item->id }}" @if(in_array($item->id, $selectedCategories)) checked @endif>--}}
+{{--                    <label for="category{{ $item->id }}">{{ $item->name }}</label>--}}
+                    <a href="{{ route('category.show', $item) }}">{{ $item->name }}</a>
+                </li>
             @endforeach
         </ul>
     </div>

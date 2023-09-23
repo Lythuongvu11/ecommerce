@@ -2,6 +2,7 @@
 <html lang="en" >
 <head>
     <meta charset="UTF-8">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title','Shop')</title>
     <link rel="stylesheet" href="{{asset('client/css/style.css')}}">
     <link rel="stylesheet" href="{{asset('client/css/bootstrap.css')}}">
@@ -12,15 +13,15 @@
 <!-- partial:index.partial.html -->
 <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,700' rel='stylesheet' type='text/css'>
 <div id="wrapper">
-    <div class="cart-icon-top">
-    </div>
+{{--    <div class="cart-icon-top">--}}
+{{--    </div>--}}
 
-    <div class="cart-icon-bottom">
-    </div>
+{{--    <div class="cart-icon-bottom">--}}
+{{--    </div>--}}
 
-    <div id="checkout">
-        CHECKOUT
-    </div>
+{{--    <div id="checkout">--}}
+{{--        CHECKOUT--}}
+{{--    </div>--}}
 
     <div id="info">
         <p class="i1">Add to cart interaction prototype by Virgil Pana</p>

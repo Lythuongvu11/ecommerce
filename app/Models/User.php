@@ -28,6 +28,7 @@ class User extends Authenticatable
         'gender',
         'reset_password_token',
     ];
+    protected $dates = ['deleted_at'];
 //    protected $table = 'admins';
 
     /**
@@ -49,4 +50,9 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    public function role()
+    {
+        return $this->belongsToMany(Role::class, 'role_user');
+    }
 }

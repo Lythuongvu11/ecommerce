@@ -38,15 +38,17 @@ class RoleController extends Controller
         $dataCreate['guard_name']='web';
         $role=Role::create($dataCreate);
         $role->permissions()->attach($dataCreate['permission_ids']);
-        return to_route('roles.index')->with(['message'=>'Create success']);
+        return response()->json(['message' => 'Create success']);
+//        return redirect()->route('roles.index')->with(['message'=>'Create success']);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function showdata()
     {
-        //
+        $roles=Role::get();
+        return $roles;
     }
 
     /**

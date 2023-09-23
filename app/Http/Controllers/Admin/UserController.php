@@ -47,17 +47,19 @@ class UserController extends Controller
         $dataCreate=$request->all();
         $dataCreate['password']= Hash::make($request->password);
         $user = $this->user->create($dataCreate);
-        $user->roles()->attach($dataCreate['role_ids']);
-        return to_route('users.index')->with(['message'=>'Create success']);
+        return response()->json(['message' => 'Create success']);
+//        return redirect()->route('users.index')->with(['message'=>'Create success']);
 
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function showdata()
     {
-        //
+        $users = User::get();
+
+        return $users;
     }
 
     /**
@@ -67,7 +69,12 @@ class UserController extends Controller
     {
         $user=$this->user->findOrFail($id)->load('roles');
         $roles = $this->role->all()->groupBy('group');
-        return view('admin.users.edit',compact('user','roles'));
+        return response()->json([
+            'user'=>$user,
+            'roles'=>$roles
+        ]);
+
+//        return view('admin.users.edit',compact('user','roles'));
     }
 
     /**
@@ -83,7 +90,8 @@ class UserController extends Controller
         }
         $user ->update($dataUpdate);
         $user->roles()->sync($dataUpdate['role_ids']??[]);
-        return to_route('users.index')->with(['message'=>'Update success']);
+
+//        return to_route('users.index')->with(['message'=>'Update success']);
     }
 
     /**
@@ -91,9 +99,10 @@ class UserController extends Controller
      */
     public function destroy(string $id)
     {
-        $user=$this->user->findOrFail($id)->load('roles');
+        $user = $this->user->findOrFail($id);
         $user->delete();
-        return redirect()->route('users.index')->with(['message' => 'Delete success']);
+        return response()->json(['message' => 'Delete success']);
+//        return redirect()->route('users.index')->with(['message' => 'Delete success']);
 
     }
 }

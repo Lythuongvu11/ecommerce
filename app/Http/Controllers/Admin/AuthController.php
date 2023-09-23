@@ -29,10 +29,19 @@ class AuthController extends Controller
         $admin =Admin::where('email', $request->email)->first();
         if ($admin && Hash::check($request->password, $admin->password)) {
             // Đăng nhập thành công
-            return redirect()->intended('/admin/dashboard');
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Login successfully',
+                'data' => $admin
+            ]);
+//            return redirect()->intended('/admin/dashboard');
         } else {
-            // Đăng nhập thất bại
-            return redirect()->back()->withErrors(['email' => 'Login information is incorrect']);
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Login information is incorrect',
+                    'data' => null
+                ]);
+//            return redirect()->back()->withErrors(['email' => 'Login information is incorrect']);
         }
     }
     public function logout(Request $request)
@@ -53,8 +62,8 @@ class AuthController extends Controller
     {
         $request->validate(['email' => 'required|exists:admins,email'],
             [
-                'email.required' => 'Email không được để trống',
-                'email.exists' => 'Email không tồn tại',
+                'email.required' => 'Email cannot be blank',
+                'email.exists' => 'Email does not exist',
             ]);
         $token = strtoupper(Str::random(15));
         $admin = Admin::where('email', $request->email)->first();
@@ -66,19 +75,35 @@ class AuthController extends Controller
             });
 
             if ($mailSent) {
-                return redirect()->back()->with('message', 'Vui lòng kiểm tra email để lấy lại mật khẩu');
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'Please check your email to retrieve your password',
+                ]);
+//                return redirect()->back()->with('message', 'Vui lòng kiểm tra email để lấy lại mật khẩu');
             } else {
-                return redirect()->back()->withErrors(['message' => 'Có lỗi trong quá trình gửi email']);
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'There was an error sending email',
+                ]);
+//                return redirect()->back()->withErrors(['message' => 'Có lỗi trong quá trình gửi email']);
             }
         } else {
-            return redirect()->back()->withErrors(['message' => 'Email không tồn tại']);
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Email does not exist',
+            ]);
+//            return redirect()->back()->withErrors(['message' => 'Email không tồn tại']);
         }
     }
 
     public function showResetPasswordForm(Request  $request,$token){
         $admin = Admin::where('reset_password_token', $token)->first();
         if (!$admin) {
-            return redirect()->route('admin.login')->with(['message' => 'Đường dẫn không hợp lệ']);
+                return response()->json([
+                'status' => 'error',
+                'message' => 'Invalid path',
+            ]);
+//            return redirect()->route('admin.login')->with(['message' => 'Invalid path']);
         }
 
         return view('admin.auth.reset_password', compact('admin', 'token'));
@@ -94,17 +119,28 @@ class AuthController extends Controller
             ->where('id', $request->admin)
             ->first();
         if (!$admin) {
-            return redirect()->route('admin.login')->with(['error' => 'Đường dẫn không hợp lệ']);
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Invalid path',
+            ]);
+//            return redirect()->route('admin.login')->with(['error' => 'Invalid path']);
         }
         $newPassword = Hash::make($request->password);
         try {
             $admin->password = $newPassword;
             $admin->reset_password_token = null;
             $admin->save();
-
-            return redirect()->route('admin.login')->with(['message' => 'Đổi mật khẩu thành công']);
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Password changed successfully',
+            ]);
+//            return redirect()->route('admin.login')->with(['message' => 'Đổi mật khẩu thành công']);
         } catch (\Exception $e) {
-            return redirect()->back()->withErrors(['password' => 'Đã có lỗi xảy ra khi thay đổi mật khẩu']);
+            return response()->json([
+                'status' => 'error',
+                'message' => 'An error occurred while changing the password',
+            ]);
+//            return redirect()->back()->withErrors(['password' => 'Đã có lỗi xảy ra khi thay đổi mật khẩu']);
         }
     }
 }
